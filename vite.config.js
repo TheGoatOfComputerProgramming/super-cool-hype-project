@@ -11,7 +11,7 @@ export default defineConfig({
     port: 5174
   },
   build: {
-    outDir: 'docs',
+    outDir: 'docs', //For gh pages
     emptyOutDir: true
   },
   resolve: {
