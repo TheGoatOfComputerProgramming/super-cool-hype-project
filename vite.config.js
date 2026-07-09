@@ -10,6 +10,10 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5174
   },
+  build: {
+    outDir: 'docs',
+    emptyOutDir: true
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './'),
