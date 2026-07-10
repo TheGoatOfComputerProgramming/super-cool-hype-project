@@ -1,5 +1,6 @@
 
 export function drawCar(steeringAngle) {
+    translate(0,-10,0)
     allWheels(steeringAngle)
     carWindshield()
     carFront()

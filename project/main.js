@@ -4,17 +4,21 @@ import { vector } from "@/utils/vec3.js";
 import { drawCar } from "./car.js";
 //We can use this to load textures or sounds
 export function preload() {
-
+    img = loadImage('watkinsGlenV2.png');
 }
+let img
+let tNow
+
+let onLine
 
 //Constants that never change
 let gravity = vector(0, 9.8, 0);
 let mass = 200
-let friction = 0.99
+let friction = 0.9999
 
 //Car state
-let position = vector(0, 0, 0);
-let carAngle = 0;
+let position = vector(-2380, 0, 2490);
+let carAngle = -90;
 
 let velocity = vector(0, 0, 0);
 
@@ -25,16 +29,29 @@ let steeringAngle = 0
 let camDistance = 300;
 let camHeight = 100;
 
+let isRacing = false;
+
 
 function setup() {
     angleMode(RADIANS);
+    createCanvas(400, 400, WEBGL);
 }
 
 //Called every frame
 export function draw(t, dt) {
 
     background(30, 30, 30);
-    drawGrid(500000, 1000)
+    background(220);
+
+
+    push()
+    texture(img);
+    noStroke();
+    rotateX(180)
+    // translate(640,0,700)
+    rotateY(90)
+    box(10635, 0, 18900);
+    pop()
     orbitControl(); //Enable mouse movement in the scene
     ambientLight(80, 80, 80);  //Add some ambient light to the scene
 
@@ -46,7 +63,7 @@ export function draw(t, dt) {
 
     let forward = vector(sin(carAngle), 0, cos(carAngle));
 
-    let bar = (2000 - (Math.abs(velocity.x) + Math.abs(velocity.z)))
+    let bar = (3000 - Math.hypot(Math.abs(velocity.x),Math.abs(velocity.z)))
     let foo = steeringAngle / 30 * bar;
     //steering
     if (keyIsDown(LEFT_ARROW)) {
@@ -63,7 +80,7 @@ export function draw(t, dt) {
     steeringAngle = Math.max(-30, Math.min(30, steeringAngle))
 
     if (keyIsDown(UP_ARROW)) {
-        velocity = velocity.plus(forward.times(10));
+        velocity = velocity.plus(forward.times(15));
     }
     if (keyIsDown(DOWN_ARROW)) {
         velocity = velocity.minus(forward.times(3));
@@ -73,9 +90,7 @@ export function draw(t, dt) {
     }
     let velocityAngle = atan2(velocity.x, velocity.z)
     let driftAngle = velocityAngle - carAngle; //Math.atan2(Math.sin(velocityAngle - carAngle), Math.cos(velocityAngle - carAngle));
-    let isDrifting = Math.abs(driftAngle) > 10;//(5 * Math.PI / 180)
-    console.log(isDrifting)
-    console.log(velocityAngle)
+    let isDrifting = Math.abs(driftAngle) > 3;//(5 * Math.PI / 180)
     if (isDrifting) {
         const speed = Math.hypot(velocity.x, velocity.z);
 
@@ -86,12 +101,33 @@ export function draw(t, dt) {
         while (diff < -180) diff += 360;
 
         velocityAngle += diff * 0.50;
-        velocity.x = Math.sin((velocityAngle)/180*Math.PI) * speed;
-        velocity.z = Math.cos((velocityAngle)/180*Math.PI) * speed;
+        velocity.x = Math.sin((velocityAngle) / 180 * Math.PI) * speed;
+        velocity.z = Math.cos((velocityAngle) / 180 * Math.PI) * speed;
+    }
+    
+    if (position.x < -2900 && position.x > -3100 && position.z < 2625 && position.z > 2275) {
+
+
+        // Math.abs(position.x - 2490) < 200
+
+        if (isRacing && onLine) {
+            if ((t - tNow) > 10) {
+                console.log(t - tNow)
+            }
+        }
+
+        tNow = t
+
+        isRacing = true;
+
+
+        onLine = true;
+
+
     }
 
 
-
+    // console.log (isRacing)
 
     //velocity.z *= 0.95
     //velocity.x *= 0.95
