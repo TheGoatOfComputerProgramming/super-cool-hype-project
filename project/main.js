@@ -12,9 +12,6 @@ let tNow
 let onLine
 
 //Constants that never change
-let gravity = vector(0, 9.8, 0);
-let mass = 200
-let friction = 0.9999
 
 //Car state
 let position = vector(-2380, 0, 2490);
